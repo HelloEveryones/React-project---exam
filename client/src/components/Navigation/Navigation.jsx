@@ -7,8 +7,7 @@ export default function Navigation() {
         <header>
             <div className={styles["nav"]}>
                 <div className={styles["logo"]}>
-                    <Link to={"/"}>Movie <span><Mania></Mania></span></Link>
-                    
+                    <Link to={"/"}>Movie <span>Mania</span></Link>
                 </div>
                 <nav>
                     <ul>
