@@ -5,9 +5,10 @@ import styles from './navigation.module.css';
 export default function Navigation() {
     return (
         <header>
-            <div className={styles.nav}>
-                <div className={styles.logo}>
-                    <Link to="/">Movie <span>Mania</span></Link>
+            <div className={styles["nav"]}>
+                <div className={styles["logo"]}>
+                    <Link to={"/"}>Movie <span><Mania></Mania></span></Link>
+                    
                 </div>
                 <nav>
                     <ul>

@@ -1,3 +1,5 @@
+import Navigation from "./components/Navigation/Navigation"
+import Footer from "./components/Footer/Footer"
 
 
 
@@ -5,7 +7,9 @@ function App() {
   
   return (
     <>
-      <h1>hello</h1>
+    
+      <Navigation/>
+      <Footer/>
     </>
   )
 }
