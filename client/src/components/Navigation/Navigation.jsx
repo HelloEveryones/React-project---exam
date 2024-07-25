@@ -16,7 +16,7 @@ export default function Navigation() {
                         <li><Link to="/add-movie">Add Movie</Link></li>
                         <li><Link to="/login">Login</Link></li>
                         <li><Link to="/register">Register</Link></li>
-                        <li><a href="">Logout</a></li>
+                        <li><Link to="/logout">Logout</Link></li>
                     </ul>
                 </nav>
             </div>
