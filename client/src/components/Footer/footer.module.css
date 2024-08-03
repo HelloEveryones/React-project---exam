@@ -1,4 +1,4 @@
-footer {
+.footer {
     box-sizing: content-box;
     align-self: center;
     border: 20px;
@@ -15,4 +15,4 @@ footer {
     height: 45px;
     width: 40%;
 
-}
+} 

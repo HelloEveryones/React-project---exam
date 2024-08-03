@@ -1,39 +1,62 @@
-import styles from "./addMovie.module.css"
+import { useContext, useState } from "react";
+import { Context } from "../../context/useContext";
+import styles from "./addMovie.module.css";
 
+export const AddMovie = ({
+    onCreateSubmit,
+}) => {
+    const { formError } = useContext(Context);
+    const [createData, setCreateData] = useState({
+        title: "",
+        director: "",
+        year: "",
+        genre: "",
+        img: "",
+        description: "",
+        comments: [],
+    });
 
-export default function AddMovie() {
+    const onCreateInputChange = (e) => {
+        setCreateData((oldState) => ({ ...oldState, [e.target.name]: e.target.value }));
+    }
+
     return (
         <div className={styles["add-movie"]}>
             <h3>Add Movie</h3>
-            <form>
-                <div className="field">
+            <form onSubmit={(e) => onCreateSubmit(e, createData)}>
+                {formError &&
+                    <div className="error">
+                        <p>{formError}</p>
+                    </div>
+                }
+                <div>
                     <label>Title</label>
-                    <input type="text" name="title" />
+                    <input type="text" name="title" value={createData.title} onChange={onCreateInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Director</label>
-                    <input type="text" name="director" />
+                    <input type="text" name="director" value={createData.director} onChange={onCreateInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Year</label>
-                    <input type="text" name="year" />
+                    <input type="text" name="year" value={createData.year} onChange={onCreateInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Genre</label>
-                    <input type="text" name="genre" />
+                    <input type="text" name="genre" value={createData.genre} onChange={onCreateInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Image</label>
-                    <input type="text" name="imageUrl" />
+                    <input type="text" name="img" value={createData.img} onChange={onCreateInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Plot</label>
-                    <textarea name="plot" id="plot" cols="21" rows="10"></textarea>
+                    <textarea name="description" id="description" cols="21" rows="10" value={createData.description} onChange={onCreateInputChange} ></textarea>
                 </div>
-                <div className="button">
-                    <input type="submit" value="Add" />
+                <div>
+                    <input className={styles["button"]} type="submit" value="Add" />
                 </div>
             </form>
         </div>
-    );
+    )
 }

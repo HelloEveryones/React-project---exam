@@ -1,11 +1,15 @@
-.movie-list ul li  {
+.movie-list ul li {
+    
     background-color: black;
     text-decoration: none;
     display:inline-block;
     margin: 65px;
     border-style: outset;
-    border-color: red;
+    border-color: rgb(231, 165, 24)
     
+}
+h1 {
+    color: rgb(231, 165, 24);
 }
 li img {
     align-self: auto;

@@ -1,27 +1,39 @@
-async function movieService(method, url, data) {
-    let options = {
-        method: method,
-        headers: {}
-    };
-    
+
+async function movieService(method, url, data, token) {
+    let options = {};
     if (method !== "GET") {
-        options.headers["Content-Type"] = "application/json";
-        options.body = JSON.stringify(data);
+        options.method = method;
+        if (data) {
+            options.headers = {
+                "Content-Type": "application/json"
+            };
+            options.body = JSON.stringify(data);
+        }
     }
-
-    const response = await fetch(url, options);
-    let result;
-
-    if (response.ok && response.status === 204) {
-        return {};
+    if(token){
+        options.headers ={
+            ...options?.headers,
+            "X-Authorization": token
+        }
     }
+        const response = await fetch(url, options);
+        
+        let rezult = {};
+        if (response.ok && response.status === 204) {
+            return rezult
+        }
+        if(url === "http://localhost:3030/users/logout"){
+            return rezult;
+        }
+        
+        if(!response.ok){
+            throw await response.json()
+        }
+        rezult = await response.json();
+        return rezult;
+    
 
-    if (!response.ok) {
-        throw await response.json();
-    }
 
-    result = await response.json();
-    return result;
 }
 
 const get = movieService.bind(null, "GET");
@@ -30,10 +42,10 @@ const put = movieService.bind(null, "PUT");
 const del = movieService.bind(null, "DELETE");
 
 const services = {
-    get,
-    post,
-    put,
-    delete: del
+    "get": get,
+    "post": post,
+    "put": put,
+    "delete": del
 };
 
 export default services;

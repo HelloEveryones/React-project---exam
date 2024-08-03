@@ -4,13 +4,13 @@
     text-decoration: none;
     padding-top: 20px;
     border-style: outset;
-    border-color: red;
+    border-color: rgb(231, 165, 24);
     padding-right: 40px;
     padding-left: 20px;
 }
 
 .details h3 {
-    color: #ffffff;
+    color: rgb(231, 165, 24);
     font-size: 300%;
     text-shadow: none;
     line-height: 1;
@@ -31,7 +31,7 @@
 }
 
 .details article img {
-    border: 5px solid red;
+    border: 5px solid  rgb(231, 165, 24);
     align-self: auto;
     margin-left: 10px;
     margin-right: 10px;

@@ -6,7 +6,7 @@
     font-family: fantasy;
 }
 .logo a span {
-    color: rgb(70, 70, 148)
+    color: rgb(231, 165, 24)
 }
 .nav {
     box-sizing: content-box;
@@ -26,7 +26,7 @@
 .nav nav ul li {
     display: inline-block;
     text-decoration: none;
-    color: rgb(115, 8, 246);
+    color: rgb(231, 165, 24);
     margin-right: 10px;
 }
 

@@ -1,22 +1,41 @@
-import styles from "./login.module.css"
+import { useState, useContext } from "react";
+import { Context } from "../../context/useContext";
+import styles from "./login.module.css";
 
-export default function Login() {
+export const Login = ({
+    onLogin
+}) => {
+    const { formError } = useContext(Context);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    })
+
+    const onLoginInputChange = (e) => {
+        setFormData((oldFormData) => ({ ...oldFormData, [e.target.name]: e.target.value }));
+    }
+
     return (
         <div className={styles["login"]}>
             <h3>Login</h3>
-            <form>
-                <div className="field">
-                    <label>Username</label>
-                    <input type="text" name="username" />
+            <form onSubmit={(e)=>onLogin(e, formData)}>
+                {formError &&
+                    <div className="error">
+                        <p>{formError}</p>
+                    </div>
+                }
+                <div>
+                    <label>Email</label>
+                    <input type="text" name="email" value={formData.email} onChange={onLoginInputChange} />
                 </div>
-                <div className="field">
+                <div>
                     <label>Password</label>
-                    <input type="password" name="password" />
+                    <input type="password" name="password" value={formData.password} onChange={onLoginInputChange} />
                 </div>
-                <div className="button">
-                    <input type="submit" value="Login" />
+                <div >
+                    <input className={styles["button"]} type="submit" value="Login" />
                 </div>
             </form>
         </div>
-    );
+    )
 }

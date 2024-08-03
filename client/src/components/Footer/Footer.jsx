@@ -1,8 +1,8 @@
 import styles from "./footer.module.css"
-export default function Footer(){
+export const Footer = () => {
     return (
         <footer>
-        <div>
+        <div className={styles["footer"]}>
             <h4>Have fun</h4>
             <p>Design by Iva Kostadinova &#169;</p>
         </div>
