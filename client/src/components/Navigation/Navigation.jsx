@@ -3,7 +3,7 @@ import styles from "./navigation.module.css";
 import { Link } from "react-router-dom";
 
 
-
+import { Wheather } from "../Wheather/Wheather";
 export const Navigation = ({
     user,
     onLogout,
@@ -18,7 +18,7 @@ export const Navigation = ({
                     
                 </div>
                 
-               
+                <Wheather />
 
                 <nav>
                     <ul>
