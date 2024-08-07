@@ -1,11 +1,8 @@
 import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/useContext";
 import styles from "./comments.module.css";
-
 import services from "../../services/movieService";
 import { useParams } from "react-router-dom";
-
-
 export const Comments = () => {
     const { email, token } = useContext(Context);
     const [comment, setComment] = useState({

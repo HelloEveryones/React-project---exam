@@ -17,7 +17,6 @@ async function movieService(method, url, data, token) {
         }
     }
         const response = await fetch(url, options);
-        
         let rezult = {};
         if (response.ok && response.status === 204) {
             return rezult

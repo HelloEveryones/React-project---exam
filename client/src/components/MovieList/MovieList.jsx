@@ -2,6 +2,7 @@ import { MovieCard } from "./MovieCard";
 import styles from "./movieList.module.css";
 
 export const MovieList = ({ movies }) => {
+    console.log("Rendering MovieList with movies:", movies); 
     return (
         <div className={styles["movie-list"]}>
             <h1>All Movies</h1>
