@@ -52,7 +52,7 @@ function App() {
 
     try {
       const response = await services.post(baseUrl, data, user.accessToken);
-      setMovies((oldMovies) => [...oldMovies, response]);
+      setMovies((oldMovies) => [response, ...oldMovies]);
       setFormError("");
       navigate("/movies");
     } catch (error) {
