@@ -1,4 +1,4 @@
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+const apiKey = "2eb3e03a21484e1a9e5194321240708";
 
 
 export const getWheather = async () => {
