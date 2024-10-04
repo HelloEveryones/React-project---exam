@@ -1687,6 +1687,15 @@
     console.log(`Server started on port ${port}. You can make requests to http://localhost:${port}/`);
     console.log(`Admin panel located at http://localhost:${port}/admin`);
 
+
+    const cors = require('cors');
+
+app.use(cors({
+  origin: 'https://moviemaniareact.netlify.app', // Въведете правилния адрес
+  credentials: true
+}));
+
+
     var softuniPracticeServer = {
 
     };
