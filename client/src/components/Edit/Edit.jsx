@@ -4,7 +4,8 @@ import { Context } from "../../context/useContext";
 import services from "../../services/movieService";
 import { useNavigate, useParams } from "react-router-dom";
 
-const baseUrl = "http://localhost:3030/data/movies"
+const baseUrl = "https://your-backend-url.onrender.com/data/movies";
+
 
 export const Edit = ({
     onEditSubmit

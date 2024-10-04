@@ -22,7 +22,8 @@ import { Context } from "./context/useContext";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
 
-const baseUrl = "http://localhost:3030/data/movies"
+const baseUrl = "https://your-backend-url.onrender.com/data/movies";
+
 
 function App() {
   const [movies, setMovies] = useState([]);

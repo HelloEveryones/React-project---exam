@@ -14,7 +14,8 @@ export const Comments = () => {
     const { movieId } = useParams();
 
     useEffect(() => {
-        services.get(`http://localhost:3030/data/comments?where=movieId%3D%22${movieId}%22`)
+        services.get(`https://your-backend-url.onrender.com/data/comments?where=movieId%3D%22${movieId}%22`)
+
             .then(response => setComments(response))
     }, [movieId])
 
@@ -28,7 +29,8 @@ export const Comments = () => {
             return
         }
         const commentWithMovieIdandEmail = { ...comment, movieId, author: email }
-        const response = await services.post(`http://localhost:3030/data/comments`, commentWithMovieIdandEmail, token);
+        const response = await services.post(`https://your-backend-url.onrender.com/data/comments`, commentWithMovieIdandEmail, token);
+
         setComments(oldComments => [...oldComments, response]);
         setComment({
             text: ""

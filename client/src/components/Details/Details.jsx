@@ -6,7 +6,7 @@ import { Context } from "../../context/useContext";
 import styles from "./details.module.css";
 import services from "../../services/movieService";
 
-const baseUrl = "http://localhost:3030/data/movies";
+const baseUrl = "https://your-backend-url.onrender.com/data/movies";
 
 export const Details = ({
     onDeleteClick,
