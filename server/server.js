@@ -1681,8 +1681,10 @@
     ];
     
     const express = require('express');
-    const app = express();
-    const cors = require('cors');
+const cors = require('cors');
+
+
+const app = express();
 app.use(cors({
     origin: ['http://localhost:5173', 'https://moviemaniareact.netlify.app'],
     credentials: true

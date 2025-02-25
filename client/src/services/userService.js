@@ -1,9 +1,12 @@
 import services from "./movieService";
+const baseUrl = process.env.NODE_ENV === "development" 
+    ? "http://localhost:3030/data/movies"  
+    : "https://react-project-exam.onrender.com/data/movies"; 
 
-const baseUrl = import.meta.env.DEV
-    ? "http://localhost:3030/users" 
-    : "https://your-backend-url.onrender.com/users";
 
-export const login = (data) => services.post(`${baseUrl}/login`, data);
-export const register = (data) => services.post(`${baseUrl}/register`, data);
-export const logout = (token) => services.get(`${baseUrl}/logout`, null, token);
+
+export const login = (data) => services.post(`${baseUrl}/login`,data);
+
+export const register = (data) => services.post(`${baseUrl}/register`,data);
+
+export const logout = (token) => services.get(`${baseUrl}/logout`,null, token )

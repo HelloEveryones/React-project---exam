@@ -4,77 +4,66 @@ import styles from "./comments.module.css";
 import services from "../../services/movieService";
 import { useParams } from "react-router-dom";
 
-// Определяне на baseUrl (локален или продакшън)
-const baseUrl = import.meta.env.DEV
-    ? "http://localhost:3030/data/comments"
-    : "https://your-backend-url.onrender.com/data/comments";
 
 export const Comments = () => {
     const { email, token } = useContext(Context);
-    console.log("Token being sent:", token);
-    const [comment, setComment] = useState({ text: "" });
+    const [comment, setComment] = useState({
+        text: ""
+    });
     const [comments, setComments] = useState([]);
     const { movieId } = useParams();
 
     useEffect(() => {
-        services.get(`${baseUrl}?where=movieId%3D%22${movieId}%22`)
+        services.get(`https://react-project-exam.onrender.com/data/comments?where=movieId%3D%22${movieId}%22`)
+
             .then(response => setComments(response))
-            .catch(err => console.log("Error fetching comments:", err));
-    }, [movieId]);
+    }, [movieId])
 
     const onTextChange = (e) => {
-        setComment(text => ({ ...text, [e.target.name]: e.target.value }));
-    };
+        setComment(text => ({ ...text, [e.target.name]: e.target.value }))
+    }
 
     const onCommentSubmit = async (e, comment) => {
         e.preventDefault();
-        if (comment.text.trim() === '') {
-            return;
+        if(comment.text === ''){
+            return
         }
-        
-        const commentWithMovieIdAndEmail = { ...comment, movieId, author: email };
-        
-        try {
-            const response = await services.post(baseUrl, commentWithMovieIdAndEmail, token);
-            setComments(oldComments => [...oldComments, response]);
-            setComment({ text: "" });
-        } catch (error) {
-            console.log("Error posting comment:", error);
-        }
-    };
+        const commentWithMovieIdandEmail = { ...comment, movieId, author: email }
+        const response = await services.post(`https://react-project-exam.onrender.com/data/comments`, commentWithMovieIdandEmail, token);
+
+        setComments(oldComments => [...oldComments, response]);
+        setComment({
+            text: ""
+        });
+    }
     
     return (
         <>
+
             {token && (
                 <div className={styles["comments"]}>
                     <form onSubmit={(e) => onCommentSubmit(e, comment)}>
-                        <textarea 
-                            name="text" 
-                            id="comment" 
-                            placeholder="Add your comment here..." 
-                            value={comment.text} 
-                            onChange={onTextChange} 
-                        ></textarea>
+                        <textarea name="text" id="comment" placeholder="Add your comment here..." value={comment.text} onChange={onTextChange} ></textarea>
                         <input className={styles["button"]} type="submit" value="Add comment" />
                     </form>
-                </div>
-            )}
+                </div>)}
+
 
             <div className={styles["comment-list"]}>
-                {comments.length !== 0 ? (
-                    <ul>
-                        {comments.map(x => (
+                {comments.length !== 0 ?
+                    (<ul>
+                        {comments.map(x =>
+
                             <li key={x._id}>
                                 <h5>Author: {x.author}</h5>
                                 <p>{x.text}</p>
                             </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <span>No added comments.</span>
-                )}
+
+                        )}
+                    </ul>) :
+                    (<span>No added comments.</span>)}
             </div>
         </>
-    );
-};
 
+    )
+}

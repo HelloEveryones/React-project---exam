@@ -21,7 +21,7 @@ async function movieService(method, url, data, token) {
         if (response.ok && response.status === 204) {
             return rezult
         }
-        if(url === "https://your-backend-url.onrender.com/users/logout"){
+        if(url === "https://react-project-exam.onrender.com/data/movies"){
             return rezult;
         }
         

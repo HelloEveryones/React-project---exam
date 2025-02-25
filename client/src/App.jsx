@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, } from "react-router-dom"
 
 import './App.css';
 import { AddMovie } from "./components/AddMovie/AddMovie";
@@ -13,16 +13,19 @@ import { Navigation } from './components/Navigation/Navigation';
 import { Register } from "./components/Register/Register";
 import { Error } from "./components/ErrorPage/Error";
 
+
+
 import services from "./services/movieService";
 import { createFormVlaidator, registerFormValidator, editFormVlaidator } from "./utils/formValidator";
 import * as userService from "./services/userService";
 import { Context } from "./context/useContext";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
-// Определяне на baseUrl динамично (локален или деплойнат бекенд)
-const baseUrl = import.meta.env.DEV
-    ? "http://localhost:3030/data/movies"
-    : "https://your-backend-url.onrender.com/data/movies";
+
+const baseUrl = process.env.NODE_ENV === "development" 
+    ? "http://localhost:3030/data/movies"  
+    : "https://react-project-exam.onrender.com/data/movies"; 
+
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -36,92 +39,103 @@ function App() {
       .then(response => Object.values(response))
       .then(rezult => setMovies(rezult))
       .catch(err => {
-        console.log("Error fetching movies:", err.message);
+        console.log(err.message)
       });
   }, [navigate]);
 
   const onCreateSubmit = async (e, data) => {
     e.preventDefault();
     setFormError("");
+    console.log("Submitting movie data:", data); 
+
 
     const rezult = createFormVlaidator(data);
+
     if (typeof rezult === "string") {
       return setFormError(rezult);
     }
 
     try {
       const response = await services.post(baseUrl, data, user.accessToken);
+      console.log("Server response:", response);
       setMovies((oldMovies) => [response, ...oldMovies]);
       setFormError("");
       navigate("/movies");
     } catch (error) {
-      console.log("Error creating movie:", error.message);
+      console.log(error.message);
+      
     }
-  };
+  }
 
   const onDeleteClick = async (id) => {
     try {
       await services.delete(`${baseUrl}/${id}`, null, user.accessToken);
-      setMovies(oldMovies => oldMovies.filter(x => x._id !== id));
-      navigate("/movies");
     } catch (error) {
-      console.log("Error deleting movie:", error.message);
+      console.log(error.message);
+      
     }
-  };
+    setMovies(oldMovies => oldMovies.filter(x => x._id !== id));
+    navigate("/movies");
+  }
 
   const onEditSubmit = async (e, movieId, data) => {
     e.preventDefault();
     setFormError("");
 
     const rezult = editFormVlaidator(data);
+   
     if (typeof rezult === "string") {
       return setFormError(rezult);
     }
 
     try {
       const response = await services.put(`${baseUrl}/${movieId}`, data, user.accessToken);
-      setMovies(oldMovies => oldMovies.map(x => x._id === movieId ? response : x));
-      setFormError("");
+      setMovies(oldMovies => oldMovies.map(x => x._id === movieId ? x = response : x));
+      setFormError("")
       navigate(`/movies/${movieId}`);
     } catch (error) {
-      console.log("Error editing movie:", error.message);
+      console.log(error.message);
       setFormError(error.message);
     }
-  };
+  }
+
+
 
   const onRegister = async (e, userForm) => {
     e.preventDefault();
+
     setFormError("");
 
     const rezult = registerFormValidator(userForm);
+
     if (typeof rezult === "string") {
       return setFormError(rezult);
     }
 
-    const { repeatPassword, ...userInfo } = userForm;
+    const { repeatPassword, ...userInfo } = userForm
 
     try {
       await userService.register(userInfo);
       navigate("/login");
     } catch (error) {
-      console.log("Error registering user:", error.message);
+      console.log(error.message);
       setFormError(error.message);
     }
-  };
+  }
 
   const onLogin = async (e, userForm) => {
     e.preventDefault();
     setFormError("");
 
     try {
-      const response = await userService.login(userForm);
+      const response = await userService.login(userForm)
       setUser(response);
       navigate("/");
     } catch (error) {
-      console.log("Error logging in:", error.message);
+      console.log(error.message);
       setFormError(error.message);
     }
-  };
+  }
 
   const onLogout = async () => {
     try {
@@ -129,9 +143,9 @@ function App() {
       setUser("");
       navigate("/");
     } catch (error) {
-      console.log("Error logging out:", error.message);
+      console.log(error.message);
     }
-  };
+  }
 
   const appContext = {
     token: user.accessToken,
@@ -140,23 +154,23 @@ function App() {
     formError,
   };
 
-  const isUser = !!user;
+  const isUser = user ? true : false;
 
   return (
     <>
       <Context.Provider value={appContext}>
-        <Navigation user={user} onLogout={onLogout} />
+        <Navigation user={user} onLogout={onLogout}/>
         
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/movies" element={<MovieList movies={movies} />} />
-          <Route path="/register" element={!isUser ? <Register onRegister={onRegister} /> : <Error />} />
-          <Route path="/login" element={!isUser ? <Login onLogin={onLogin} /> : <Error />} />
-          <Route path="/add-movie" element={isUser ? <AddMovie onCreateSubmit={onCreateSubmit} /> : <Error />} />
-          <Route path="/movies/:movieId" element={<Details onDeleteClick={onDeleteClick} />} />
-          <Route path="/movies/:movieId/edit" element={isUser ? <Edit onEditSubmit={onEditSubmit} /> : <Error />} />
-          <Route path="/404" element={<Error />} />
-          <Route path="*" element={<Error />} />
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/movies" element={<MovieList movies={movies}/>}></Route>
+          <Route path="/register" element={!isUser ? <Register onRegister={onRegister} /> : <Error/>}></Route>
+          <Route path="/login" element={!isUser ? <Login onLogin={onLogin} /> : <Error/>}></Route>
+          <Route path="/add-movie" element={isUser ? <AddMovie onCreateSubmit={onCreateSubmit} /> : <Error />}></Route>
+          <Route path="/movies/:movieId" element={<Details onDeleteClick={onDeleteClick} />}></Route>
+          <Route path="/movies/:movieId/edit" element={isUser ? <Edit onEditSubmit={onEditSubmit} /> : <Error />}></Route>
+          <Route path="/404" element={<Error />}></Route>
+          <Route path="*" element={<Error />}></Route>
         </Routes>
       </Context.Provider>
 

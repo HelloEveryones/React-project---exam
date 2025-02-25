@@ -6,14 +6,15 @@ import { Context } from "../../context/useContext";
 import styles from "./details.module.css";
 import services from "../../services/movieService";
 
-// Определяне на baseUrl динамично (локален или деплойнат бекенд)
-const baseUrl = import.meta.env.DEV
-    ? "http://localhost:3030/data/movies"
-    : "https://your-backend-url.onrender.com/data/movies";
+const baseUrl = process.env.NODE_ENV === "development" 
+    ? "http://localhost:3030/data/movies"  
+    : "https://react-project-exam.onrender.com/data/movies"; 
 
-export const Details = ({ onDeleteClick }) => {
-    const navigate = useNavigate();
-    const { movieId } = useParams();
+export const Details = ({
+    onDeleteClick,
+}) => {
+    const navigate = useNavigate()
+    const { movieId } = useParams()
     const [deleteModal, setDeleteModal] = useState(false);
     const [movie, setMovie] = useState({});
     const { userId, formError } = useContext(Context);
@@ -22,20 +23,18 @@ export const Details = ({ onDeleteClick }) => {
         services.get(`${baseUrl}/${movieId}`)
             .then(response => setMovie(response))
             .catch(err => {
-                console.log("Error fetching movie details:", err);
-                console.log("Fetching movie with ID:", movieId);
-
+                console.log(err.message);
                 navigate("/404");
-            });
-    }, [movieId, navigate]);
+            })
+    }, [movieId, navigate])
 
     const onDeleteButton = () => {
         setDeleteModal(true);
-    };
-
+    }
     const onCancelClick = () => {
         setDeleteModal(false);
-    };
+    }
+
 
     return (
         <>
@@ -43,11 +42,11 @@ export const Details = ({ onDeleteClick }) => {
             <div className={styles["details"]}>
                 <h3>Details</h3>
                 <article>
-                    {formError && (
+                    {formError &&
                         <div className="error">
                             <p>{formError}</p>
                         </div>
-                    )}
+                    }
                     <h4>{movie.title}</h4>
                     <img src={movie.img} alt={movie.title} />
                     <h5>{movie.director}, {movie.year}</h5>
@@ -55,13 +54,15 @@ export const Details = ({ onDeleteClick }) => {
                     <p>{movie.description}</p>
                     {userId && userId === movie._ownerId && (
                         <>
-                            <button><Link to={`/movies/${movie._id}/edit`}>Edit</Link></button>
-                            <button onClick={onDeleteButton}>Delete</button>
+                            <button><Link to={`/movies/${movie._id}/edit`} >Edit</Link></button>
+                            <button onClick={() => onDeleteButton()} >Delete</button>
                         </>
                     )}
+
                 </article>
                 <Comments />
             </div>
         </>
-    );
-};
+
+    )
+}

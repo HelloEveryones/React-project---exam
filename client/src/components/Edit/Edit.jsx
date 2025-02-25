@@ -4,12 +4,15 @@ import { Context } from "../../context/useContext";
 import services from "../../services/movieService";
 import { useNavigate, useParams } from "react-router-dom";
 
+const baseUrl = process.env.NODE_ENV === "development" 
+    ? "http://localhost:3030/data/movies"  
+    : "https://react-project-exam.onrender.com/data/movies"; 
 
-const baseUrl = import.meta.env.DEV
-    ? "http://localhost:3030/data/movies"
-    : "https://your-backend-url.onrender.com/data/movies";
 
-export const Edit = ({ onEditSubmit }) => {
+
+export const Edit = ({
+    onEditSubmit
+}) => {
     const navigate = useNavigate();
     const { movieId } = useParams();
     const { formError, userId } = useContext(Context);
@@ -21,7 +24,7 @@ export const Edit = ({ onEditSubmit }) => {
         img: "",
         description: "",
     });
-
+    
     useEffect(() => {
         services.get(`${baseUrl}/${movieId}`)
             .then(response => {
@@ -33,22 +36,24 @@ export const Edit = ({ onEditSubmit }) => {
             .catch(err => {
                 console.log(err.message);
                 navigate("/404");
-            });
+            })
     }, [movieId, navigate, userId]);
+
+
 
     const onEditInputChange = (e) => {
         setEditedData((oldState) => ({ ...oldState, [e.target.name]: e.target.value }));
-    };
+    }
 
     return (
         <div className={styles["add-movie"]}>
             <h3>Edit Movie</h3>
             <form onSubmit={(e) => onEditSubmit(e, editedData._id, editedData)}>
-                {formError && (
+                {formError &&
                     <div className="error">
                         <p>{formError}</p>
                     </div>
-                )}
+                }
                 <div>
                     <label>Title</label>
                     <input type="text" name="title" value={editedData.title} onChange={onEditInputChange} />
@@ -78,5 +83,5 @@ export const Edit = ({ onEditSubmit }) => {
                 </div>
             </form>
         </div>
-    );
-};
+    )
+}
