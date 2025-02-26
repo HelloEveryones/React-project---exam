@@ -1,35 +1,61 @@
-
-
-export const registerFormValidator = (data) =>{
-  if (data.password !== data.repeatPassword) {
-      return "Passwords must match!"
-    }
-    if (data.password.length < 3 || data.password.length > 10) {
-      return "Password must be atleast 3 characters long!"
-    }
-    if (!data.email.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)) {
-      return "Invalid email!"
-    }
-    return data
-}
-
-export const createFormVlaidator = (data) =>{
-
-  const {title,director,year,genre,img, description} = data
-
-  if( !title || !director || !year || !genre || !img || !description){
-      return "All fields are required!";
+export const registerFormValidator = (data) => {
+  if (!data || typeof data !== "object") {
+    return "Invalid input data!";
   }
-  
-  return data
-}
 
-export const editFormVlaidator = (data) =>{
+  const { email, password, repeatPassword } = data;
 
-  const {title,director,year,genre,img, description} = data
-
-  if( !title || !director || !year || !genre || !img || !description){
-      return "All fields are required!";
+  if (!email || !password || !repeatPassword) {
+    return "All fields are required!";
   }
-  return data
-}
+
+  if (password !== repeatPassword) {
+    return "Passwords must match!";
+  }
+
+  if (password.length < 3 || password.length > 10) {
+    return "Password must be between 3 and 10 characters long!";
+  }
+
+  if (!email.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/)) {
+    return "Invalid email format!";
+  }
+
+  return data;
+};
+
+export const createFormValidator = (data) => {
+  if (!data || typeof data !== "object") {
+    return "Invalid input data!";
+  }
+
+  const { title, director, year, genre, img, description } = data;
+
+  if (!title || !director || !year || !genre || !img || !description) {
+    return "All fields are required!";
+  }
+
+  if (isNaN(year) || year < 1888 || year > new Date().getFullYear()) {
+    return "Invalid year!";
+  }
+
+  return data;
+};
+
+export const editFormValidator = (data) => {
+  if (!data || typeof data !== "object") {
+    return "Invalid input data!";
+  }
+
+  const { title, director, year, genre, img, description } = data;
+
+  if (!title || !director || !year || !genre || !img || !description) {
+    return "All fields are required!";
+  }
+
+  if (isNaN(year) || year < 1888 || year > new Date().getFullYear()) {
+    return "Invalid year!";
+  }
+
+  return data;
+};

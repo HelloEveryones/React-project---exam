@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Routes, Route, useNavigate, } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import './App.css';
 import { AddMovie } from "./components/AddMovie/AddMovie";
@@ -13,170 +13,163 @@ import { Navigation } from './components/Navigation/Navigation';
 import { Register } from "./components/Register/Register";
 import { Error } from "./components/ErrorPage/Error";
 
-
-
-import services from "./services/movieService";
-import { createFormVlaidator, registerFormValidator, editFormVlaidator } from "./utils/formValidator";
+import services, { BASE_URL } from "./services/movieService";
+import { createFormValidator, registerFormValidator, editFormValidator } from "./utils/formValidator";
 import * as userService from "./services/userService";
 import { Context } from "./context/useContext";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 
-
-const baseUrl = process.env.NODE_ENV === "development" 
-    ? "http://localhost:3030/data/movies"  
-    : "https://react-project-exam.onrender.com/data/movies"; 
-
-
 function App() {
-  const [movies, setMovies] = useState([]);
-  const [formError, setFormError] = useState("");
-  const [user, setUser] = useLocalStorage("auth", "");
-  const navigate = useNavigate();
-  useContext(Context);
+    const [movies, setMovies] = useState([]);
+    const [formError, setFormError] = useState("");
+    const [user, setUser] = useLocalStorage("auth", null);
+    const navigate = useNavigate();
+    useContext(Context);
 
-  useEffect(() => {
-    services.get(baseUrl)
-      .then(response => Object.values(response))
-      .then(rezult => setMovies(rezult))
-      .catch(err => {
-        console.log(err.message)
-      });
-  }, [navigate]);
+    useEffect(() => {
+        services.get(BASE_URL)
+            .then(response => Object.values(response))
+            .then(result => setMovies(result))
+            .catch(err => console.log(err.message));
+    }, [navigate]);
 
-  const onCreateSubmit = async (e, data) => {
-    e.preventDefault();
-    setFormError("");
-    console.log("Submitting movie data:", data); 
+    const onCreateSubmit = async (e, data) => {
+        e.preventDefault();
+        setFormError("");
 
+        const result = createFormValidator(data);
 
-    const rezult = createFormVlaidator(data);
+        if (typeof result === "string") {
+            return setFormError(result);
+        }
 
-    if (typeof rezult === "string") {
-      return setFormError(rezult);
-    }
+        try {
+            const response = await services.post(BASE_URL, data, user.accessToken);
+            setMovies(oldMovies => [response, ...oldMovies]);
+            setFormError("");
+            navigate("/movies");
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
-    try {
-      const response = await services.post(baseUrl, data, user.accessToken);
-      console.log("Server response:", response);
-      setMovies((oldMovies) => [response, ...oldMovies]);
-      setFormError("");
-      navigate("/movies");
-    } catch (error) {
-      console.log(error.message);
-      
-    }
-  }
+    const onDeleteClick = async (id) => {
+        try {
+            await services.delete(`${BASE_URL}/${id}`, null, user.accessToken);
+            setMovies(oldMovies => oldMovies.filter(x => x._id !== id));
+            navigate("/movies");
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
-  const onDeleteClick = async (id) => {
-    try {
-      await services.delete(`${baseUrl}/${id}`, null, user.accessToken);
-    } catch (error) {
-      console.log(error.message);
-      
-    }
-    setMovies(oldMovies => oldMovies.filter(x => x._id !== id));
-    navigate("/movies");
-  }
+    const onEditSubmit = async (e, movieId, data) => {
+        e.preventDefault();
+        setFormError("");
 
-  const onEditSubmit = async (e, movieId, data) => {
-    e.preventDefault();
-    setFormError("");
+        const result = editFormValidator(data);
 
-    const rezult = editFormVlaidator(data);
-   
-    if (typeof rezult === "string") {
-      return setFormError(rezult);
-    }
+        if (typeof result === "string") {
+            return setFormError(result);
+        }
 
-    try {
-      const response = await services.put(`${baseUrl}/${movieId}`, data, user.accessToken);
-      setMovies(oldMovies => oldMovies.map(x => x._id === movieId ? x = response : x));
-      setFormError("")
-      navigate(`/movies/${movieId}`);
-    } catch (error) {
-      console.log(error.message);
-      setFormError(error.message);
-    }
-  }
+        try {
+            const response = await services.put(`${BASE_URL}/${movieId}`, data, user.accessToken);
+            setMovies(oldMovies => oldMovies.map(x => x._id === movieId ? response : x));
+            setFormError("");
+            navigate(`/movies/${movieId}`);
+        } catch (error) {
+            console.log(error.message);
+            setFormError(error.message);
+        }
+    };
 
+    const onRegister = async (e, userForm) => {
+        e.preventDefault();
+        setFormError("");
 
+        const result = registerFormValidator(userForm);
 
-  const onRegister = async (e, userForm) => {
-    e.preventDefault();
+        if (typeof result === "string") {
+            return setFormError(result);
+        }
 
-    setFormError("");
+        const { repeatPassword, ...userInfo } = userForm;
 
-    const rezult = registerFormValidator(userForm);
+        try {
+            await userService.register(userInfo);
+            navigate("/login");
+        } catch (error) {
+            console.log(error.message);
+            setFormError(error.message);
+        }
+    };
 
-    if (typeof rezult === "string") {
-      return setFormError(rezult);
-    }
+    const onLogin = async (e, userForm) => {
+        e.preventDefault();
+        setFormError("");
 
-    const { repeatPassword, ...userInfo } = userForm
+        try {
+            const response = await userService.login(userForm);
+            setUser(response);
+            navigate("/");
+        } catch (error) {
+            console.log(error.message);
+            setFormError(error.message);
+        }
+    };
 
-    try {
-      await userService.register(userInfo);
-      navigate("/login");
-    } catch (error) {
-      console.log(error.message);
-      setFormError(error.message);
-    }
-  }
-
-  const onLogin = async (e, userForm) => {
-    e.preventDefault();
-    setFormError("");
-
-    try {
-      const response = await userService.login(userForm)
-      setUser(response);
-      navigate("/");
-    } catch (error) {
-      console.log(error.message);
-      setFormError(error.message);
-    }
-  }
-
-  const onLogout = async () => {
-    try {
-      await userService.logout(user.accessToken);
-      setUser("");
-      navigate("/");
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  const appContext = {
-    token: user.accessToken,
-    email: user.email,
-    userId: user._id,
-    formError,
+    const onLogout = async () => {
+      try {
+          if (!user?.accessToken) {
+              console.error("❌ Няма наличен access token за logout!");
+              return;
+          }
+  
+          await userService.logout(user.accessToken);
+  
+          
+          setUser(null);
+          localStorage.removeItem("auth");
+  
+          console.log("✅ Потребителят беше изключен успешно!");
+          navigate("/");
+      } catch (error) {
+          console.error("❌ Грешка при logout:", error.message);
+      }
   };
+  
 
-  const isUser = user ? true : false;
+    const appContext = {
+        token: user?.accessToken,
+        email: user?.email,
+        userId: user?._id,
+        formError,
+    };
 
-  return (
-    <>
-      <Context.Provider value={appContext}>
-        <Navigation user={user} onLogout={onLogout}/>
-        
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/movies" element={<MovieList movies={movies}/>}></Route>
-          <Route path="/register" element={!isUser ? <Register onRegister={onRegister} /> : <Error/>}></Route>
-          <Route path="/login" element={!isUser ? <Login onLogin={onLogin} /> : <Error/>}></Route>
-          <Route path="/add-movie" element={isUser ? <AddMovie onCreateSubmit={onCreateSubmit} /> : <Error />}></Route>
-          <Route path="/movies/:movieId" element={<Details onDeleteClick={onDeleteClick} />}></Route>
-          <Route path="/movies/:movieId/edit" element={isUser ? <Edit onEditSubmit={onEditSubmit} /> : <Error />}></Route>
-          <Route path="/404" element={<Error />}></Route>
-          <Route path="*" element={<Error />}></Route>
-        </Routes>
-      </Context.Provider>
+    const isUser = user && user.accessToken ? true : false;
 
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Context.Provider value={appContext}>
+                <Navigation user={user} onLogout={onLogout} />
+
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/movies" element={<MovieList movies={movies} />} />
+                    <Route path="/register" element={!isUser ? <Register onRegister={onRegister} /> : <Error />} />
+                    <Route path="/login" element={!isUser ? <Login onLogin={onLogin} /> : <Error />} />
+                    <Route path="/add-movie" element={isUser ? <AddMovie onCreateSubmit={onCreateSubmit} /> : <Error />} />
+                    <Route path="/movies/:movieId" element={<Details onDeleteClick={onDeleteClick} />} />
+                    <Route path="/movies/:movieId/edit" element={isUser ? <Edit onEditSubmit={onEditSubmit} /> : <Error />} />
+                    <Route path="/404" element={<Error />} />
+                    <Route path="*" element={<Error />} />
+                </Routes>
+            </Context.Provider>
+
+            <Footer />
+        </>
+    );
 }
 
 export default App;

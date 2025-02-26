@@ -4,18 +4,16 @@ import { Context } from "../../context/useContext";
 import services from "../../services/movieService";
 import { useNavigate, useParams } from "react-router-dom";
 
-const baseUrl = process.env.NODE_ENV === "development" 
-    ? "http://localhost:3030/data/movies"  
-    : "https://react-project-exam.onrender.com/data/movies"; 
+// Правилен `BASE_URL`:
+const BASE_URL = process.env.NODE_ENV === "development"
+    ? "http://localhost:3030"
+    : "https://react-project-exam.onrender.com";
 
-
-
-export const Edit = ({
-    onEditSubmit
-}) => {
+export const Edit = ({ onEditSubmit }) => {
     const navigate = useNavigate();
     const { movieId } = useParams();
     const { formError, userId } = useContext(Context);
+
     const [editedData, setEditedData] = useState({
         title: "",
         director: "",
@@ -24,26 +22,26 @@ export const Edit = ({
         img: "",
         description: "",
     });
-    
+
     useEffect(() => {
-        services.get(`${baseUrl}/${movieId}`)
+        services.get(`${BASE_URL}/data/movies/${movieId}`)
             .then(response => {
-                if (userId !== response._ownerId) {
-                    return navigate("/404");
+                if (!response || response.message || userId !== response._ownerId) {
+                    console.log("❌ Нямаш права за редакция или филмът не съществува.");
+                    navigate("/404");
+                    return;
                 }
                 setEditedData({ ...response });
             })
             .catch(err => {
-                console.log(err.message);
+                console.log("❌ Грешка при зареждане на филма:", err.message);
                 navigate("/404");
-            })
+            });
     }, [movieId, navigate, userId]);
-
-
 
     const onEditInputChange = (e) => {
         setEditedData((oldState) => ({ ...oldState, [e.target.name]: e.target.value }));
-    }
+    };
 
     return (
         <div className={styles["add-movie"]}>
@@ -83,5 +81,5 @@ export const Edit = ({
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
