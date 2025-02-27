@@ -1488,7 +1488,10 @@
     			description: "Natasha Romanoff aka Black Widow confronts the darker parts of her ledger when a dangerous conspiracy with ties to her past arises. Comes on the screens 2020.",
     			img: "https://miro.medium.com/max/735/1*akkAa2CcbKqHsvqVusF3-w.jpeg",
     			_createdOn: 1614935055353,
-    			_id: "1240549d-f0e0-497e-ab99-eb8f703713d7"
+    			_id: "1240549d-f0e0-497e-ab99-eb8f703713d7",
+                genre: "Adventure",
+                 year: 2021,
+                 director: "Cate Shortland"
     		},
     		"143e5265-333e-4150-80e4-16b61de31aa0": {
     			_ownerId: "847ec027-f659-4086-8032-5173e2f9c93a",
@@ -1496,7 +1499,10 @@
     			description: "Diana must contend with a work colleague and businessman, whose desire for extreme wealth sends the world down a path of destruction, after an ancient artifact that grants wishes goes missing.",
     			img: "https://pbs.twimg.com/media/ETINgKwWAAAyA4r.jpg",
     			_createdOn: 1614935181470,
-    			_id: "143e5265-333e-4150-80e4-16b61de31aa0"
+    			_id: "143e5265-333e-4150-80e4-16b61de31aa0",
+                genre: "Superhero film",
+                 year: 2017,
+                 director: "Patty Jenkins"
     		},
     		"a9bae6d8-793e-46c4-a9db-deb9e3484909": {
     			_ownerId: "35c62d76-8152-4626-8712-eeb96381bea8",
@@ -1504,7 +1510,10 @@
     			description: "After more than thirty years of service as one of the Navy's top aviators, Pete Mitchell is where he belongs, pushing the envelope as a courageous test pilot and dodging the advancement in rank that would ground him.",
     			img: "https://i.pinimg.com/originals/f2/a4/58/f2a458048757bc6914d559c9e4dc962a.jpg",
     			_createdOn: 1614935268135,
-    			_id: "a9bae6d8-793e-46c4-a9db-deb9e3484909"
+    			_id: "a9bae6d8-793e-46c4-a9db-deb9e3484909",
+                genre: "Action drama",
+                 year: 2022,
+                 director: "Joseph Kosinski"
     		}
     	},
     	likes: {

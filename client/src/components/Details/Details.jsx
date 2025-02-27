@@ -60,7 +60,7 @@ export const Details = ({ onDeleteClick }) => {
                     }
                     <h4>{movie.title}</h4>
                     <img src={movie.img} alt={movie.title} />
-                    <h5>{movie.director}, {movie.year}</h5>
+                    <h5>{movie.director},{movie.year}</h5>
                     <p>{movie.genre}</p>
                     <p>{movie.description}</p>
 
